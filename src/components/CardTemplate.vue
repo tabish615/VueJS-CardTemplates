@@ -82,7 +82,7 @@ export default {
 .template-view {
   display: flex;
   flex-direction: column;
-  max-height: 523vh;
+  max-height: 5500px;
   align-content: space-between;
   flex-wrap: wrap;
 }
@@ -100,18 +100,18 @@ export default {
 
 @media (max-width: 1140px) {
   .template-view {
-    max-height: 600vh;
+    max-height: 7500px;
   }
 }
 
 @media (max-width: 925px) {
   .template-view {
-    max-height: 845vh;
+    max-height: 9000px;
   }
 }
-@media (max-width: 600px) {
+@media (max-width: 760px) {
   .template-view {
-    max-height: 2165vh;
+    max-height: 14250px;
   }
 }
 </style>
