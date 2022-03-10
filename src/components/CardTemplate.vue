@@ -2,13 +2,13 @@
   <div style="width: 80%; margin: auto">
     <b-input-group class="mb-2">
       <b-input-group-prepend is-text>
-        <b-icon icon="search" font-scale="1.5"></b-icon>
+        <b-icon icon="search" style="width: 17px;"></b-icon>
       </b-input-group-prepend>
       <b-form-input
         type="search"
         placeholder="Search"
         v-model="searchValue"
-        style="border-left: 0; box-shadow: none"
+        style="border-left:0; box-shadow:none; border-radius:0; border-color:#ced4da; height:56px"
       >
       </b-form-input>
     </b-input-group>
@@ -24,10 +24,10 @@
         <b-card-text class="small text-muted">
           {{ item.category }}
         </b-card-text>
-        <b-card-title>
+        <b-card-title class="card-title">
           {{ item.title }}
         </b-card-title>
-        <b-card-text>
+        <b-card-text class="card-description">
           {{ item.description }}
         </b-card-text>
         <b-avatar></b-avatar>
@@ -77,12 +77,12 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .mb-2 {
-  margin: 30px auto !important;
+  margin: 50px auto !important;
 }
 .template-view {
   display: flex;
   flex-direction: column;
-  max-height: 5500px;
+  max-height: 3823px;
   align-content: space-between;
   flex-wrap: wrap;
 }
@@ -97,7 +97,32 @@ export default {
   border-radius: 15px !important;
   border: 1px solid rgba(0, 0, 0, 0.125) !important;
 }
-
+.card-description {
+  font-size: 13px;
+  line-height: 19px;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+}
+.card-title {
+  line-height: 25px;
+  font-weight: normal;
+  font-size: 20px;
+  font-weight: 500;
+}
+.input-group-text {
+  background-color: white;
+  border-radius: 0px;
+  height: 56px;
+}
+@media (max-width: 1540px) {
+  .template-view {
+    max-height: 3830px;
+  }
+}
 @media (max-width: 1140px) {
   .template-view {
     max-height: 7500px;
