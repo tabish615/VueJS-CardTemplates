@@ -12,29 +12,27 @@
       >
       </b-form-input>
     </b-input-group>
-    <b-card-group class="template-view">
-      <b-card
-        v-for="item in resultQuery"
-        v-bind:key="item.title"
-        :img-src="item.image"
-        img-alt="Image"
-        img-top
-        class="card-view"
+    <p v-if='isLoading'>Loading...</p>
+    <div class="masonry" v-else>
+      <div
+        v-for="(post, key) in resultQuery"
+        :key="key"
+        class="card"
       >
-        <b-card-text class="small text-muted">
-          {{ item.category }}
-        </b-card-text>
-        <b-card-title class="card-title">
-          {{ item.title }}
-        </b-card-title>
-        <b-card-text class="card-description">
-          {{ item.description }}
-        </b-card-text>
-        <b-avatar></b-avatar>
-
-        <b-link href="#" class="card-link">{{ item.author }}</b-link>
-      </b-card>
-    </b-card-group>
+        <div class="card-content">
+          <div v-if="post.image !== null">
+            <img :src="post.image" alt="Image" class="img-responsive" @load="rendered">
+          </div>
+          <div class="p-20">
+            <p class="small text-muted">{{ post.category }}</p>
+            <p class="card-title">{{ post.title }}</p>
+            <p class="card-description">{{ post.description }}</p>
+            <b-avatar></b-avatar>
+            <a href="#" class="card-link">{{ post.author }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -51,14 +49,13 @@ export default {
     return {
       list: [],
       searchValue: null,
+      imagesCount: 0,
+      imageCounter: 0,
+      isLoading: false,
     };
   },
   mounted() {
-    Vue.axios
-      .get('http://api.mediastack.com/v1/news?access_key=47bfd4b62d96adcf18aa83f29cd9a238')
-      .then((resp) => {
-        this.list = resp.data.data;
-      });
+    this.getPosts();
   },
   computed: {
     resultQuery() {
@@ -71,6 +68,60 @@ export default {
       return this.list;
     },
   },
+  created() {
+    const masonryEvents = ['load', 'resize'];
+    const vm = this;
+    masonryEvents.forEach((event) => {
+      window.addEventListener(event, vm.resizeAllMasonryItems);
+    });
+  },
+  watch: {
+    imagesCount() {
+      if (this.imagesCount === this.imageCounter) {
+        this.resizeAllMasonryItems();
+        this.isLoading = false;
+      }
+    },
+  },
+
+  methods: {
+    rendered() {
+      this.imagesCount++;
+      this.resizeAllMasonryItems();
+    },
+
+    getPosts() {
+      Vue.axios
+        .get('http://api.mediastack.com/v1/news?access_key=2eec0ee2c6f645a62ddf7f62251de244')
+        .then((resp) => {
+          this.list = resp.data.data;
+          this.calculateImageCount();
+        });
+    },
+
+    calculateImageCount() {
+      for (let i = 0; i < this.list.length; i++) {
+        if (this.list[i].image !== null) {
+          this.imageCounter++;
+        }
+      }
+    },
+
+    resizeMasonryItem(item) {
+      const grid = document.getElementsByClassName('masonry')[0];
+      const rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-row-gap'), 10);
+      const rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-auto-rows'), 10);
+      const rowSpan = Math.ceil((item.querySelector('.card-content').getBoundingClientRect().height + rowGap) / (rowHeight + rowGap));
+      item.style.gridRowEnd = `span ${rowSpan}`;
+    },
+
+    resizeAllMasonryItems() {
+      const allItems = document.getElementsByClassName('card');
+      for (let i = 0; i < allItems.length; i++) {
+        this.resizeMasonryItem(allItems[i]);
+      }
+    },
+  },
 };
 </script>
 
@@ -79,23 +130,11 @@ export default {
 .mb-2 {
   margin: 50px auto !important;
 }
-.template-view {
-  display: flex;
-  flex-direction: column;
-  max-height: 3823px;
-  align-content: space-between;
-  flex-wrap: wrap;
+.p-20 {
+  padding: 20px;
 }
-.card-img-top {
-  border-top-left-radius: 15px !important;
-  border-top-right-radius: 15px !important;
-}
-.card-view {
-  margin-bottom: 20px !important;
-  max-height: 900px;
-  width: 300px;
+.card {
   border-radius: 15px !important;
-  border: 1px solid rgba(0, 0, 0, 0.125) !important;
 }
 .card-description {
   font-size: 13px;
@@ -118,25 +157,19 @@ export default {
   border-radius: 0px;
   height: 56px;
 }
-@media (max-width: 1540px) {
-  .template-view {
-    max-height: 3830px;
-  }
+.img-responsive {
+  width: 100%;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 }
-@media (max-width: 1140px) {
-  .template-view {
-    max-height: 7500px;
-  }
+.masonry {
+  display: grid;
+  grid-gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: 0;
 }
-
-@media (max-width: 925px) {
-  .template-view {
-    max-height: 9000px;
-  }
-}
-@media (max-width: 760px) {
-  .template-view {
-    max-height: 14250px;
-  }
+.card-link {
+  font-size: 11px;
+  text-decoration: none;
 }
 </style>
