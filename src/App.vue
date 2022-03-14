@@ -29,4 +29,7 @@
     }
   }
 }
+body {
+  background-color: #eff0f3 !important;
+}
 </style>

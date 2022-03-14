@@ -12,8 +12,7 @@
       >
       </b-form-input>
     </b-input-group>
-    <p v-if='isLoading'>Loading...</p>
-    <div class="masonry" v-else>
+    <div class="masonry">
       <div
         v-for="(post, key) in resultQuery"
         :key="key"
@@ -24,11 +23,21 @@
             <img :src="post.image" alt="Image" class="img-responsive" @load="rendered">
           </div>
           <div class="p-20">
-            <p class="small text-muted">{{ post.category }}</p>
+            <div style="display: flex; justify-content: space-between">
+              <p class="small text-muted uppercase">{{ post.category }}</p>
+              <p class="small text-muted">12 Days Ago</p>
+            </div>
             <p class="card-title">{{ post.title }}</p>
             <p class="card-description">{{ post.description }}</p>
-            <b-avatar></b-avatar>
-            <a href="#" class="card-link">{{ post.author }}</a>
+            <div style="display: flex; justify-content: space-between; align-items: center">
+              <div style="width: 50%">
+                <b-avatar src="https://placekitten.com/300/300"></b-avatar>
+                <a href="#" class="card-link" style="margin-left: 5%">Glen Williams</a>
+              </div>
+              <div>
+                <a href="#" class="card-link">Read More</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -48,10 +57,9 @@ export default {
   data() {
     return {
       list: [],
-      searchValue: null,
+      searchValue: "",
       imagesCount: 0,
       imageCounter: 0,
-      isLoading: false,
     };
   },
   mounted() {
@@ -60,26 +68,17 @@ export default {
   computed: {
     resultQuery() {
       if (this.searchValue) {
-        return this.list.filter((item) => this.searchValue
-          .toLowerCase()
-          .split(' ')
-          .every((v) => item.title.toLowerCase().includes(v)));
+        this.calculateImageCount()
+        return this.list.filter((item) => item.title.toLowerCase().includes(this.searchValue.toLowerCase()));
       }
       return this.list;
-    },
+    }
   },
-  created() {
-    const masonryEvents = ['load', 'resize'];
-    const vm = this;
-    masonryEvents.forEach((event) => {
-      window.addEventListener(event, vm.resizeAllMasonryItems);
-    });
-  },
+
   watch: {
     imagesCount() {
-      if (this.imagesCount === this.imageCounter) {
+      if (this.imagesCount === this.imageCounter || this.searchValue.length || this.imagesCount > this.imageCounter) {
         this.resizeAllMasonryItems();
-        this.isLoading = false;
       }
     },
   },
@@ -87,7 +86,6 @@ export default {
   methods: {
     rendered() {
       this.imagesCount++;
-      this.resizeAllMasonryItems();
     },
 
     getPosts() {
@@ -100,6 +98,7 @@ export default {
     },
 
     calculateImageCount() {
+      this.imageCounter = 0;
       for (let i = 0; i < this.list.length; i++) {
         if (this.list[i].image !== null) {
           this.imageCounter++;
@@ -134,7 +133,16 @@ export default {
   padding: 20px;
 }
 .card {
-  border-radius: 15px !important;
+  border-radius: 16px !important;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  filter: drop-shadow(0px 24px 64px rgba(0,0,0,0.06));
+  transition: all 0.3s ease;
 }
 .card-description {
   font-size: 13px;
@@ -147,10 +155,11 @@ export default {
   -webkit-box-orient: vertical;
 }
 .card-title {
-  line-height: 25px;
-  font-weight: normal;
+  font-family: "DM Serif";
+  font-weight: 600;
   font-size: 20px;
-  font-weight: 500;
+  line-height: 25px;
+  letter-spacing: -0.3px;
 }
 .input-group-text {
   background-color: white;
@@ -159,17 +168,28 @@ export default {
 }
 .img-responsive {
   width: 100%;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 }
 .masonry {
   display: grid;
   grid-gap: 15px;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   grid-auto-rows: 0;
 }
 .card-link {
   font-size: 11px;
   text-decoration: none;
+}
+.card-content p.small {
+  letter-spacing: 0px;
+  font-family: "Open Sans";
+  font-weight: 600;
+}
+.card:hover {
+  filter: drop-shadow(0px 24px 40px rgba(0,0,0,0.16));
+}
+.uppercase {
+  text-transform: uppercase;
 }
 </style>
