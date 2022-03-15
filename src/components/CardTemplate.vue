@@ -12,11 +12,11 @@
       >
       </b-form-input>
     </b-input-group>
-    <div class="masonry">
+    <div class="masonry row">
       <div
         v-for="(post, key) in resultQuery"
         :key="key"
-        class="card"
+        class="card col"
       >
         <div class="card-content">
           <div v-if="post.image !== null">
@@ -129,13 +129,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Open+Sans:wght@600&display=swap');
 
 .mb-2 {
   margin: 50px auto !important;
 }
 .p-20 {
   padding: 20px;
+}
+.row > * {
+  padding: 0;
 }
 .card {
   border-radius: 16px !important;
