@@ -2,13 +2,13 @@
   <div style="width: 80%; margin: auto">
     <b-input-group class="mb-2">
       <b-input-group-prepend is-text>
-        <b-icon icon="search" style="width: 17px;"></b-icon>
+        <b-icon icon="search" style="width: 16px;"></b-icon>
       </b-input-group-prepend>
       <b-form-input
         type="search"
         placeholder="Search"
         v-model="searchValue"
-        style="border-left:0; box-shadow:none; border-radius:0; border-color:#ced4da; height:56px"
+        class="search-input"
       >
       </b-form-input>
     </b-input-group>
@@ -171,7 +171,8 @@ export default {
 .input-group-text {
   background-color: white;
   border-radius: 0px;
-  height: 56px;
+  height: 60px;
+  border-radius: 4px 0px 0px 4px;
 }
 .img-responsive {
   width: 100%;
@@ -198,5 +199,12 @@ export default {
 }
 .uppercase {
   text-transform: uppercase;
+}
+.search-input {
+  border-left: 0;
+  box-shadow: none;
+  border-radius: 0px 4px 4px 0px;
+  border-color:#ced4da;
+  height:60px
 }
 </style>
