@@ -57,7 +57,7 @@ export default {
   data() {
     return {
       list: [],
-      searchValue: "",
+      searchValue: '',
       imagesCount: 0,
       imageCounter: 0,
     };
@@ -68,16 +68,19 @@ export default {
   computed: {
     resultQuery() {
       if (this.searchValue) {
-        this.calculateImageCount()
-        return this.list.filter((item) => item.title.toLowerCase().includes(this.searchValue.toLowerCase()));
+        this.calculateImageCount();
+        return this.list.filter((item) => item.title.toLowerCase()
+          .includes(this.searchValue.toLowerCase()));
       }
       return this.list;
-    }
+    },
   },
 
   watch: {
     imagesCount() {
-      if (this.imagesCount === this.imageCounter || this.searchValue.length || this.imagesCount > this.imageCounter) {
+      if (this.imagesCount === this.imageCounter
+          || this.searchValue.length
+          || this.imagesCount > this.imageCounter) {
         this.resizeAllMasonryItems();
       }
     },
@@ -126,6 +129,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Open+Sans:wght@600&display=swap');
+
 .mb-2 {
   margin: 50px auto !important;
 }
@@ -155,8 +160,8 @@ export default {
   -webkit-box-orient: vertical;
 }
 .card-title {
-  font-family: "DM Serif";
-  font-weight: 600;
+  font-family: 'DM Serif Display', serif;
+  font-weight: 400;
   font-size: 20px;
   line-height: 25px;
   letter-spacing: -0.3px;
@@ -183,7 +188,7 @@ export default {
 }
 .card-content p.small {
   letter-spacing: 0px;
-  font-family: "Open Sans";
+  font-family: 'Open Sans', sans-serif;
   font-weight: 600;
 }
 .card:hover {
